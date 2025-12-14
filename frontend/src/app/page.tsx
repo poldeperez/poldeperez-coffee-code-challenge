@@ -1,15 +1,34 @@
-import { Card } from '@/components/Card';
-import { fetchItems } from '@/services/fetchItems';
+'use client';
 
-export default async function Home() {
-  const items = await fetchItems();
+import CoffeeList from '@/components/CoffeeList';
+import { fetchItems } from '@/services/fetchItems';
+import { HeroSection } from '@/components/HeroSection';
+import { useEffect, useState } from 'react';
+import { Item } from '@/types';
+import Lenis from 'lenis';
+
+export default function Home() {
+  const [items, setItems] = useState<Item[]>([]);
+  useEffect(() => {
+    const lenis = new Lenis();
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    // Fetch coffe list
+    fetchItems().then(setItems);
+
+    return () => lenis.destroy();
+  }, []);
 
   return (
-    <main className='mx-10 mt-12 px-10'>
-      <h1 className='text-3xl mb-10'>You&apos;ve got this! 🚀</h1>
-      {items.map(({ id, title, description }) => (
-        <Card key={id} title={title} description={description} />
-      ))}
-    </main>
+    <>
+      <HeroSection />
+      <CoffeeList items={items} />
+    </>
   );
 }
