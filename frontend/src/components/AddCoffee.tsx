@@ -12,37 +12,56 @@ type Props = {
 };
 
 export function AddCoffee({ isOpen, onClose, onConfirm }: Props) {
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-  const [type, setType] = useState<'arabic' | 'robusta'>('arabic');
-  const [imageUrl, setImageUrl] = useState('');
-  const [description, setDescription] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    price: '',
+    type: 'arabic' as 'arabic' | 'robusta',
+    imageUrl: '',
+    description: '',
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+
+    if (name === 'price' && value !== '' && !/^\d*\.?\d{0,2}$/.test(value)) return;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleTypeChange = (type: 'arabic' | 'robusta') => {
+    setFormData((prev) => ({ ...prev, type }));
+  };
 
   const handleDiscard = () => {
-    setName('');
-    setPrice('');
-    setType('arabic');
-    setImageUrl('');
-    setDescription('');
+    setFormData({
+      name: '',
+      price: '',
+      type: 'arabic',
+      imageUrl: '',
+      description: '',
+    });
     onClose();
   };
 
   const handleConfirm = () => {
     onConfirm({
-      title: name.trim(),
-      price: price.trim(),
-      type,
-      imageUrl: imageUrl.trim(),
-      description: description.trim(),
+      title: formData.name.trim(),
+      price: formData.price.trim(),
+      type: formData.type,
+      imageUrl: formData.imageUrl.trim(),
+      description: formData.description.trim(),
     });
     handleDiscard();
   };
 
   const isFormIncomplete =
-    !name.trim() ||
-    !price.trim() ||
-    !imageUrl.trim() ||
-    !description.trim();
+    !formData.name.trim() ||
+    !formData.price.trim() ||
+    !formData.imageUrl.trim() ||
+    !formData.description.trim();
 
   return (
     <AnimatePresence>
@@ -53,13 +72,10 @@ export function AddCoffee({ isOpen, onClose, onConfirm }: Props) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          {/* Backdrop */}
-          <div 
-            className="absolute inset-0 bg-black/70"
-            onClick={handleDiscard}
-          />
+          {/* Background */}
+          <div className="absolute inset-0 bg-black/70" onClick={handleDiscard} />
 
-          {/* Modal */}
+          {/* Popup */}
           <motion.div
             className="relative z-10 bg-[#191919] rounded-lg p-10 w-full max-w-[714px] mx-4 flex flex-col items-center"
             initial={{ y: -80, opacity: 0, scale: 0.98 }}
@@ -80,11 +96,9 @@ export function AddCoffee({ isOpen, onClose, onConfirm }: Props) {
                 unoptimized
               />
             </div>
+
             {/* Close button */}
-            <button 
-              onClick={handleDiscard}
-              className="absolute top-10 right-10 text-gray-400 hover:text-white"
-            >
+            <button onClick={handleDiscard} className="absolute top-10 right-10 text-gray-400 hover:text-white">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -96,28 +110,27 @@ export function AddCoffee({ isOpen, onClose, onConfirm }: Props) {
               {/* Name and Price */}
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
-                  <label className="text-[14px] text-[#9B9B9B] mb-1 block">Name</label>
+                  <label htmlFor="name" className="text-[14px] text-[#9B9B9B] mb-1 block">Name</label>
                   <input
+                    id="name"
                     type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
                     className="w-full bg-[#2D2D2D] border border-[#838382] text-[14px] text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-[#BA8039]"
                     placeholder="Name your coffee here"
                   />
                 </div>
                 <div className="w-full md:w-32">
-                  <label className="text-[14px] text-[#9B9B9B] mb-1 block">Price</label>
+                  <label htmlFor="price" className="text-[14px] text-[#9B9B9B] mb-1 block">Price</label>
                   <div className="relative">
                     <input
+                      id="price"
                       type="text"
+                      name="price"
                       inputMode="decimal"
-                      value={price}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === '' || /^\d*\.?\d{0,2}$/.test(value)) {
-                          setPrice(value);
-                        }
-                      }}
+                      value={formData.price}
+                      onChange={handleChange}
                       className="w-full bg-[#2D2D2D] border border-[#838382] text-[14px] text-white rounded-lg pl-4 pr-8 py-2 focus:outline-none focus:ring-1 focus:ring-[#BA8039]"
                       placeholder="0.00"
                     />
@@ -128,40 +141,34 @@ export function AddCoffee({ isOpen, onClose, onConfirm }: Props) {
 
               {/* Type */}
               <div>
-                <label className="text-[14px] text-[#9B9B9B] mb-1 block">Type</label>
+                <label htmlFor="type" className="text-[14px] text-[#9B9B9B] mb-1 block">Type</label>
                 <div className="flex gap-4">
-                  <button
-                    type="button"
-                    onClick={() => setType('arabic')}
-                    className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors bg-transparent border ${
-                      type === 'arabic'
-                        ? 'border-white text-white'
-                        : 'border-[#838382] text-[#838382] hover:border-white hover:text-white'
-                    }`}
-                  >
-                    Arabic
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setType('robusta')}
-                    className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors bg-transparent border ${
-                      type === 'robusta'
-                        ? 'border-white text-white'
-                        : 'border-[#838382] text-[#838382] hover:border-white hover:text-white'
-                    }`}
-                  >
-                    Robusta
-                  </button>
+                  {['arabic', 'robusta'].map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => handleTypeChange(t as 'arabic' | 'robusta')}
+                      className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors bg-transparent border ${
+                        formData.type === t
+                          ? 'border-white text-white'
+                          : 'border-[#838382] text-[#838382] hover:border-white hover:text-white'
+                      }`}
+                    >
+                      {t.charAt(0).toUpperCase() + t.slice(1)}
+                    </button>
+                  ))}
                 </div>
               </div>
 
               {/* Image URL */}
               <div>
-                <label className="text-[14px] text-[#9B9B9B] mb-1 block">Image URL</label>
+                <label htmlFor="imageUrl" className="text-[14px] text-[#9B9B9B] mb-1 block">Image URL</label>
                 <input
+                  id="imageUrl"
+                  name="imageUrl"
                   type="text"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
+                  value={formData.imageUrl}
+                  onChange={handleChange}
                   className="w-full bg-[#2D2D2D] border border-[#838382] text-[14px] text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-[#BA8039]"
                   placeholder="Paste image URL here"
                 />
@@ -169,10 +176,12 @@ export function AddCoffee({ isOpen, onClose, onConfirm }: Props) {
 
               {/* Description */}
               <div>
-                <label className="text-[14px] text-[#9B9B9B] mb-1 block">Description</label>
+                <label htmlFor="description" className="text-[14px] text-[#9B9B9B] mb-1 block">Description</label>
                 <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
                   className="w-full bg-[#2D2D2D] border border-[#838382] text-[14px] text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-[#BA8039] resize-none h-16"
                   placeholder="Add a description"
                 />
