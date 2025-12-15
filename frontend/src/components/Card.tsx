@@ -13,6 +13,7 @@ export const Card = ({ title, description, imageUrl, price, type }: Props) => {
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          unoptimized
         />
         <span
           className={`absolute top-2 left-2 py-2 px-3 rounded-full text-xs text-white ${

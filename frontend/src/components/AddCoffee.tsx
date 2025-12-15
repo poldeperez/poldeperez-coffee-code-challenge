@@ -76,7 +76,8 @@ export function AddCoffee({ isOpen, onClose, onConfirm }: Props) {
                 className="pointer-events-none select-none"
                 aria-hidden="true"
                 priority
-                style={{ height: 'auto' }} 
+                style={{ height: 'auto' }}
+                unoptimized
               />
             </div>
             {/* Close button */}
