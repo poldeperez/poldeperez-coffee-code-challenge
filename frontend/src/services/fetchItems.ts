@@ -1,7 +1,7 @@
 import { Item } from '@/types';
 
 export async function fetchItems(): Promise<Item[]> {
-  const res = await fetch('http://localhost:3000/api/coffees', {
+  const res = await fetch('/api/coffees', {
     cache: 'no-store',
   });
 
