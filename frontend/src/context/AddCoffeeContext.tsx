@@ -27,7 +27,7 @@ export function AddCoffeeProvider({ children }: { children: ReactNode }) {
       setError(null);
       await createItem(coffee);
       closePopup();
-      router.refresh();
+      window.location.reload(); 
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
