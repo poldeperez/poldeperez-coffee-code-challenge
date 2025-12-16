@@ -1,7 +1,6 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
 import { createItem } from '@/services/createItem';
 import { AddCoffee } from '@/components/AddCoffee';
 import { ErrorBanner } from '@/components/ErrorBanner';
@@ -17,7 +16,6 @@ const AddCoffeeContext = createContext<AddCoffeeContextType | null>(null);
 export function AddCoffeeProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   const openPopup = () => setIsOpen(true);
   const closePopup = () => setIsOpen(false);

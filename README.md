@@ -103,13 +103,43 @@ So you are finished and feel like showing us some more? Here are a few things th
 
 ---
 
+### Use and deployment
+
+The frontend and backend of the project is all built using Next.js framework, using Server components and API Routes. The PostgreSQL database runs in a Docker container. Installing Docker and executing the docker-compose file in the root of the project will start the frontend container and the DB container, while seeding the database with the initial data: 
+```bash
+docker-compose up -d --build
+```
+
+The app runs at port 3000.
+
+**Tech Stack & Libraries:**
+
+- Framework: Next.js 14 (App Router)
+- Styling: Tailwind CSS
+- Database: PostgreSQL
+- Animations: Framer Motion
+- Smooth Scroll: Lenis
+- Testing: Jest & React Testing Library (Unit and Integration tests)
+- Linting: ESLint & Prettier
+
+**Deployment**
+The application is deployed from an other personal repo to AWS EC2 instance using a CI/CD pipeline via GitHub Actions. The pipeline runs tests, builds the Docker images and deploys automatically on push to main. As I didn't have the password it was not possible to accomplish this on the share repo, but you can still check the deployment part on the .github/workflow/ci.yml file in (it's the only difference between repos):
+- [Github Repository](#https://github.com/poldeperez/poldeperez-coffee-code-challenge)
+- [Web app (AWS)](#http://16.170.192.128:3000/)
+
 ### What would you improve if given more time?
 
-Please fill
+To make the web app more complete it would be interesting to add more features like:
+- Authentication: User login/signup
+- CRUD: Edit/Delete items on the list
+- Make filter options dynamic so it wouldn't require major configuration changes when adding another type of coffee (besides arabic or robusta)
+- Logging
+- Cache data
+- Image optimization for the upload images of the users
 
 ### How was your experience doing this challenge?
 
-Please fill
+I really enjoyed it because it's a complete challenge that allows you to show your skills in many aspects of web app development. I appreciated having the Figma design to guide me building the UI and also having the flexibility to use the tech stack that I felt more appropiate in each case.
 
 ---
 

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "MVST Coffee | Premium Roasted Coffee",
     description: "Make and create your favorite coffees.",
-    url: "https://your-domain.com",
+    url: "https://domain.com",
     siteName: "MVST Coffee",
     images: [
       {
